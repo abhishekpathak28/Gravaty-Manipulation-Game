@@ -6,13 +6,18 @@ public class GravityController : MonoBehaviour
     [SerializeField] private float gravityMagnitude = 15f;
     [SerializeField] private float rotationSpeed = 5f;
     [Header("References")]
+    [SerializeField] private Transform hologramAchor;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private GameObject hologramObject;
+    private Vector3 offset;
 
     public Vector3 CurrentGravityDir { get; private set; } = Vector3.down;
     private Vector3 proposedGravityDir;
     private bool isGravityChangePending;
     private Rigidbody rb;
+
+    private float currentfallTimer = 0f;
+    private bool isGameActive = true;
 
     void Start()
     {
@@ -23,35 +28,44 @@ public class GravityController : MonoBehaviour
     }
     void Update()
     {
+        if (!isGameActive) return;
         HandleGravityInput();
     }
     void FixedUpdate()
     {
+        if (!isGameActive) return;
         ApplyGravity();
         AlignPlayerToGravity();
     }
     void HandleGravityInput()
     {
         Vector3 inputDir = Vector3.zero;
+
         Vector3 camForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
+
         Vector3 camRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
+
         if (Input.GetKeyDown(KeyCode.UpArrow)) inputDir = camForward;
+
         else if (Input.GetKeyDown(KeyCode.DownArrow)) inputDir = -camForward;
+
         else if (Input.GetKeyDown(KeyCode.RightArrow)) inputDir = camRight;
+
         else if (Input.GetKeyDown(KeyCode.LeftArrow)) inputDir = -camRight;
 
 
         if (inputDir != Vector3.zero)
         {
-            proposedGravityDir = SnapToCardinalDirection(inputDir);
+            Vector3 playerRelDir = transform.TransformDirection(inputDir);
+            proposedGravityDir = SnapToCardinalDirection(-playerRelDir);
             ShowHologram(proposedGravityDir);
             isGravityChangePending = true;
         }
         if (isGravityChangePending && Input.GetKeyDown(KeyCode.Return))
         {
             ChangeGravity(proposedGravityDir);
-            ShowHologram(inputDir);
-            if (hologramObject) hologramObject.SetActive(false);
+            ShowHologram(proposedGravityDir);
+            if (hologramObject != null) hologramObject.SetActive(false);
         }
 
     }
@@ -73,6 +87,8 @@ public class GravityController : MonoBehaviour
     {
         if (hologramObject == null) return;
         hologramObject.SetActive(true);
+        hologramObject.transform.SetParent(hologramAchor);
+        hologramObject.transform.localPosition = offset;
         Quaternion targetRot = Quaternion.FromToRotation(Vector3.down, gravityDir);
         hologramObject.transform.rotation = targetRot;
     }
