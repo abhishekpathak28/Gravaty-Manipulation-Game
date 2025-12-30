@@ -9,6 +9,7 @@ public class GravityController : MonoBehaviour
     [SerializeField] private Transform hologramAchor;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private GameObject hologramObject;
+    [SerializeField] private PlayerGroundCheck groundCheckScript;
     private Vector3 offset;
 
     public Vector3 CurrentGravityDir { get; private set; } = Vector3.down;
@@ -17,23 +18,25 @@ public class GravityController : MonoBehaviour
     private Rigidbody rb;
 
     private float currentfallTimer = 0f;
-    private bool isGameActive = true;
+    private float maxFallTime = 3f;
+    private bool isInputActive = true;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         if (hologramObject) hologramObject.SetActive(false);
-        // Physics.gravity = CurrentGravityDir * gravityMagnitude;
+        if (groundCheckScript == null) Debug.LogError("GroundCheckScript missing");
     }
     void Update()
     {
-        if (!isGameActive) return;
+        if (!isInputActive) return;
         HandleGravityInput();
+        CheckFallStatus();
     }
     void FixedUpdate()
     {
-        if (!isGameActive) return;
+        if (!isInputActive) return;
         ApplyGravity();
         AlignPlayerToGravity();
     }
@@ -101,5 +104,23 @@ public class GravityController : MonoBehaviour
         if (x > y && x > z) return new Vector3(Mathf.Sign(input.x), 0, 0);
         if (y > x && y > z) return new Vector3(0, Mathf.Sign(input.y), 0);
         return new Vector3(0, 0, Mathf.Sign(input.z));
+    }
+    void CheckFallStatus()
+    {
+        if (groundCheckScript == null) return;
+        if (groundCheckScript.isGrounded)
+        {
+            currentfallTimer = 0f;
+        }
+        else
+        {
+            currentfallTimer += Time.deltaTime;
+        }
+        if (currentfallTimer > maxFallTime)
+        {
+
+            isInputActive = false;
+            GameManager.instance.GameOver();
+        }
     }
 }
