@@ -43,10 +43,10 @@ public class GravityController : MonoBehaviour
     void HandleGravityInput()
     {
         Vector3 inputDir = Vector3.zero;
+        Vector3 playerUp = -CurrentGravityDir;
+        Vector3 camForward = Vector3.ProjectOnPlane(cameraTransform.forward, playerUp).normalized;
 
-        Vector3 camForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
-
-        Vector3 camRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
+        Vector3 camRight = Vector3.ProjectOnPlane(cameraTransform.right, playerUp).normalized;
 
         if (Input.GetKeyDown(KeyCode.UpArrow)) inputDir = camForward;
 
@@ -59,8 +59,8 @@ public class GravityController : MonoBehaviour
 
         if (inputDir != Vector3.zero)
         {
-            Vector3 playerRelDir = transform.TransformDirection(inputDir);
-            proposedGravityDir = SnapToCardinalDirection(-playerRelDir);
+            // Vector3 playerRelDir = transform.TransformDirection(inputDir);
+            proposedGravityDir = SnapToCardinalDirection(inputDir);
             ShowHologram(proposedGravityDir);
             isGravityChangePending = true;
         }

@@ -20,11 +20,13 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if (!GameManager.instance.isGameActive) return;
         HandleInput();
         HandelAnimaiton();
     }
     void FixedUpdate()
     {
+        if (!GameManager.instance.isGameActive) return;
         Move();
     }
     void HandleInput()

@@ -3278,7 +3278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.15503737, g: 0.22877464, b: 0.24528301, a: 0.392}
+  m_Color: {r: 0.15503737, g: 0.22877464, b: 0.24528301, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4213,7 +4213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineThirdPersonAim
   AimCollisionFilter:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8
   IgnoreTag: 
   AimDistance: 200
   NoiseCancellation: 1
@@ -6329,7 +6329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.15503737, g: 0.22877464, b: 0.24528301, a: 0.392}
+  m_Color: {r: 0.15503737, g: 0.22877464, b: 0.24528301, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7538,8 +7538,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8c68f5347d6e824eb1d9d43e5c64bf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  gameOverScreen: {fileID: 764922331}
-  winScreen: {fileID: 1263410956}
+  isGameActive: 1
+  gameOverScreen: {fileID: 1263410956}
+  winScreen: {fileID: 764922331}
 --- !u!4 &1522206097
 Transform:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     private int totalCubes;
     private int collectedCubes;
-    private bool isGameActive = true;
+    public bool isGameActive = true;
 
     [Header("Ui Refernce")]
     [SerializeField] private GameObject gameOverScreen;
