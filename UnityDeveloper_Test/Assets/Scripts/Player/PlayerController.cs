@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private PlayerGroundCheck groundCheck;
     private Vector3 moveInput;
+    private bool wasFalling= false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -55,9 +56,18 @@ public class PlayerController : MonoBehaviour
     {
         if (animator == null) return;
         Vector3 localVel = transform.InverseTransformDirection(rb.linearVelocity);
+
         float speed = new Vector3(localVel.x, 0, localVel.z).magnitude;
+
         animator.SetFloat("Speed", speed);
+
         animator.SetBool("IsGrounded", groundCheck.isGrounded);
+        bool isFalling = !groundCheck.isGrounded && localVel.y<-0.1f;
+        if (isFalling && !wasFalling)
+        {
+            animator.SetTrigger("Falling");
+        }
+        wasFalling = isFalling;
     }
 
 }
